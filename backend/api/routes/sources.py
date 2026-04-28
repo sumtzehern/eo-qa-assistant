@@ -1,25 +1,21 @@
-"""Sources and ingestion routes."""
+"""Sources route — GET /sources only. Ingestion routes live in ingestion.py."""
 
-import uuid
-from datetime import datetime, timezone
+import logging
 
 from fastapi import APIRouter, Depends, Request
+from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.api.middleware.auth import require_admin, require_api_key
-from backend.api.middleware.rate_limit import check_rate_limit
-from backend.api.schemas.common import (
-    IngestionTriggerRequest,
-    IngestionTriggerResponse,
-    JobStatusResponse,
-    SourceItem,
-    SourcesResponse,
-)
+from backend.api.middleware.auth import require_api_key
+from backend.api.schemas.common import SourceItem, SourcesResponse
+from backend.db.models import Chunk
 from backend.db.session import get_db
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Stub source catalogue — Phase 2a populates this from the ingestion pipeline.
+# Fallback catalogue used when the DB returns no rows yet.
 _STUB_SOURCES: list[dict] = [
     {
         "source_id": "edgeone-docs",
@@ -59,9 +55,6 @@ _STUB_SOURCES: list[dict] = [
     },
 ]
 
-# Stub job store — Phase 2a replaces with real RQ/PostgreSQL tracking.
-_STUB_JOBS: dict[str, dict] = {}
-
 
 @router.get("/sources", response_model=SourcesResponse)
 async def list_sources(
@@ -71,67 +64,39 @@ async def list_sources(
 ) -> SourcesResponse:
     """Return all ingested sources and their freshness status.
 
-    Phase 2b: returns stub catalogue. Phase 3 reads live data from PostgreSQL.
+    Queries the chunks table grouped by source_id. Falls back to the stub
+    catalogue if the DB is unreachable or contains no rows.
     """
-    items = [SourceItem(**s) for s in _STUB_SOURCES]
+    try:
+        result = await db.execute(
+            select(
+                Chunk.source_id,
+                func.count(Chunk.chunk_id).label("chunk_count"),
+                func.max(Chunk.created_at).label("last_crawled"),
+            ).group_by(Chunk.source_id)
+        )
+        rows = result.all()
+    except Exception:
+        logger.warning("Failed to query chunks table for sources; using stub", exc_info=True)
+        rows = []
+
+    if rows:
+        items = [
+            SourceItem(
+                source_id=row.source_id,
+                display_name=row.source_id,
+                source_type="unknown",
+                last_crawled=row.last_crawled,
+                chunk_count=row.chunk_count,
+                status="healthy",
+            )
+            for row in rows
+        ]
+    else:
+        items = [SourceItem(**s) for s in _STUB_SOURCES]
+
     return SourcesResponse(
         sources=items,
         total=len(items),
         request_id=request.state.request_id,
     )
-
-
-@router.post("/ingestion/trigger", response_model=IngestionTriggerResponse, status_code=202)
-async def trigger_ingestion(
-    body: IngestionTriggerRequest,
-    request: Request,
-    _: str = Depends(require_admin),
-    db: AsyncSession = Depends(get_db),
-) -> IngestionTriggerResponse:
-    """Enqueue ingestion job(s) for one or all sources.
-
-    Phase 2b: creates stub job records. Phase 2a wires real RQ tasks.
-    """
-    source_ids = body.source_ids or [s["source_id"] for s in _STUB_SOURCES]
-    job_ids = []
-    for source_id in source_ids:
-        job_id = str(uuid.uuid4())
-        _STUB_JOBS[job_id] = {
-            "job_id": job_id,
-            "source_id": source_id,
-            "status": "queued",
-            "chunks_processed": 0,
-            "chunks_skipped": 0,
-            "chunks_failed": 0,
-            "started_at": None,
-            "completed_at": None,
-            "error_message": None,
-            "created_at": datetime.now(tz=timezone.utc),
-        }
-        job_ids.append(job_id)
-
-    return IngestionTriggerResponse(
-        job_ids=job_ids,
-        queued_count=len(job_ids),
-        request_id=request.state.request_id,
-    )
-
-
-@router.get("/ingestion/jobs/{job_id}", response_model=JobStatusResponse)
-async def get_job_status(
-    job_id: str,
-    request: Request,
-    tier: str = Depends(require_api_key),
-    db: AsyncSession = Depends(get_db),
-) -> JobStatusResponse:
-    """Return status of an ingestion job.
-
-    Phase 2b: reads from in-memory stub store. Phase 2a stores in PostgreSQL.
-    """
-    from fastapi import HTTPException
-
-    job = _STUB_JOBS.get(job_id)
-    if not job:
-        raise HTTPException(status_code=404, detail=f"Job {job_id!r} not found")
-
-    return JobStatusResponse(**job, request_id=request.state.request_id)
