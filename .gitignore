@@ -38,3 +38,6 @@ qdrant_data/
 .idea/
 *.swp
 *.swo
+
+# Eval results (keep directory, ignore result files)
+eval/results/*.json

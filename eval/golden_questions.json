@@ -1,0 +1,996 @@
+[
+  {
+    "id": "GQ-001",
+    "category": "configuration",
+    "question": "How do I configure HTTP/3 support in EdgeOne?",
+    "expected_topics": ["http3", "quic", "protocol", "enable"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-002",
+    "category": "configuration",
+    "question": "How do I set a custom cache TTL for static assets in EdgeOne?",
+    "expected_topics": ["cache", "ttl", "static", "rules"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-003",
+    "category": "configuration",
+    "question": "How do I add a custom response header in EdgeOne rules?",
+    "expected_topics": ["header", "response", "rules", "custom"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-004",
+    "category": "configuration",
+    "question": "How do I configure an HTTP to HTTPS redirect in EdgeOne?",
+    "expected_topics": ["redirect", "https", "http", "301"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-005",
+    "category": "configuration",
+    "question": "How do I set up HTTP/2 on an EdgeOne zone?",
+    "expected_topics": ["http2", "protocol", "zone", "enable"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-006",
+    "category": "configuration",
+    "question": "How do I configure cache bypass for API endpoints?",
+    "expected_topics": ["cache", "bypass", "api", "no-cache"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-007",
+    "category": "configuration",
+    "question": "How do I enable HSTS on my EdgeOne domain?",
+    "expected_topics": ["hsts", "security", "headers", "strict-transport"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-008",
+    "category": "configuration",
+    "question": "How do I configure URL rewriting rules in EdgeOne?",
+    "expected_topics": ["url", "rewrite", "rules", "regex"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-009",
+    "category": "configuration",
+    "question": "How do I set up wildcard subdomain rules in EdgeOne?",
+    "expected_topics": ["wildcard", "subdomain", "rules", "pattern"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-010",
+    "category": "configuration",
+    "question": "How do I configure conditional cache rules based on query strings?",
+    "expected_topics": ["cache", "query-string", "conditional", "rules"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-011",
+    "category": "configuration",
+    "question": "How do I add CORS headers to EdgeOne responses?",
+    "expected_topics": ["cors", "headers", "cross-origin", "rules"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-012",
+    "category": "configuration",
+    "question": "How do I configure TLS 1.3 only in EdgeOne?",
+    "expected_topics": ["tls", "ssl", "version", "security"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-013",
+    "category": "configuration",
+    "question": "How do I set up a custom error page for 404 responses in EdgeOne?",
+    "expected_topics": ["error-page", "404", "custom", "response"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-014",
+    "category": "configuration",
+    "question": "How do I configure origin pull authentication in EdgeOne?",
+    "expected_topics": ["origin", "authentication", "pull", "secret"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-015",
+    "category": "configuration",
+    "question": "How do I set browser cache control headers with EdgeOne rules?",
+    "expected_topics": ["cache-control", "browser", "headers", "max-age"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-016",
+    "category": "configuration",
+    "question": "How do I configure load balancing between multiple origin servers in EdgeOne?",
+    "expected_topics": ["load-balancing", "origin", "servers", "weight"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-017",
+    "category": "configuration",
+    "question": "How do I enable Gzip compression in EdgeOne?",
+    "expected_topics": ["gzip", "compression", "enable", "performance"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-018",
+    "category": "configuration",
+    "question": "How do I configure a 301 redirect for a specific URL path in EdgeOne?",
+    "expected_topics": ["redirect", "301", "url-path", "rules"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-019",
+    "category": "configuration",
+    "question": "How do I set up IP geolocation-based routing in EdgeOne?",
+    "expected_topics": ["geolocation", "routing", "ip", "region"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-020",
+    "category": "configuration",
+    "question": "How do I configure cookie-based cache variations in EdgeOne?",
+    "expected_topics": ["cache", "cookie", "vary", "key"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-021",
+    "category": "configuration",
+    "question": "How do I strip request headers before forwarding to origin in EdgeOne?",
+    "expected_topics": ["headers", "request", "strip", "origin"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-022",
+    "category": "configuration",
+    "question": "How do I configure WebSocket proxying in EdgeOne?",
+    "expected_topics": ["websocket", "proxy", "upgrade", "connection"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-023",
+    "category": "configuration",
+    "question": "How do I set up origin health checks in EdgeOne?",
+    "expected_topics": ["health-check", "origin", "failover", "monitoring"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-024",
+    "category": "configuration",
+    "question": "How do I configure origin connection timeout values in EdgeOne?",
+    "expected_topics": ["timeout", "origin", "connection", "configuration"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-025",
+    "category": "configuration",
+    "question": "How do I enable IPv6 on an EdgeOne zone?",
+    "expected_topics": ["ipv6", "zone", "network", "enable"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-026",
+    "category": "edge_functions",
+    "question": "How do I deploy a JavaScript Edge Function in EdgeOne?",
+    "expected_topics": ["edge-function", "javascript", "deploy", "worker"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-027",
+    "category": "edge_functions",
+    "question": "How do I access request headers in an EdgeOne Edge Function?",
+    "expected_topics": ["edge-function", "request", "headers", "javascript"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-028",
+    "category": "edge_functions",
+    "question": "How do I modify response headers from an EdgeOne Edge Function?",
+    "expected_topics": ["edge-function", "response", "headers", "modify"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-029",
+    "category": "edge_functions",
+    "question": "How do I read PMUSER variables in an EdgeOne Edge Function?",
+    "expected_topics": ["pmuser", "variables", "edge-function", "akamai"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-030",
+    "category": "edge_functions",
+    "question": "What JavaScript APIs are available in EdgeOne Edge Functions?",
+    "expected_topics": ["javascript", "api", "edge-function", "web-api"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-031",
+    "category": "edge_functions",
+    "question": "How do I use fetch() inside an EdgeOne Edge Function?",
+    "expected_topics": ["fetch", "edge-function", "subrequest", "javascript"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-032",
+    "category": "edge_functions",
+    "question": "How do I return a custom JSON response from an EdgeOne Edge Function?",
+    "expected_topics": ["response", "json", "edge-function", "return"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-033",
+    "category": "edge_functions",
+    "question": "How do I debug an EdgeOne Edge Function locally?",
+    "expected_topics": ["debug", "local", "edge-function", "testing"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-034",
+    "category": "edge_functions",
+    "question": "How do I handle errors in an EdgeOne Edge Function?",
+    "expected_topics": ["error", "exception", "edge-function", "try-catch"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-035",
+    "category": "edge_functions",
+    "question": "What are the execution time limits for EdgeOne Edge Functions?",
+    "expected_topics": ["timeout", "limit", "edge-function", "cpu-time"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-036",
+    "category": "edge_functions",
+    "question": "How do I use KV storage in EdgeOne Edge Functions?",
+    "expected_topics": ["kv", "storage", "edge-function", "data"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-037",
+    "category": "edge_functions",
+    "question": "How do I route requests to different origins based on URL path in an Edge Function?",
+    "expected_topics": ["routing", "origin", "path", "edge-function"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-038",
+    "category": "edge_functions",
+    "question": "How do I implement A/B testing using EdgeOne Edge Functions?",
+    "expected_topics": ["ab-testing", "edge-function", "cookie", "split"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-039",
+    "category": "edge_functions",
+    "question": "How do I implement request signing in an EdgeOne Edge Function?",
+    "expected_topics": ["signing", "hmac", "request", "edge-function"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-040",
+    "category": "edge_functions",
+    "question": "How do I stream responses from an EdgeOne Edge Function?",
+    "expected_topics": ["stream", "response", "edge-function", "readable-stream"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-041",
+    "category": "edge_functions",
+    "question": "How do I parse URL query parameters in an EdgeOne Edge Function?",
+    "expected_topics": ["url", "query", "parse", "edge-function"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-042",
+    "category": "edge_functions",
+    "question": "How do I set a cookie from an EdgeOne Edge Function?",
+    "expected_topics": ["cookie", "set", "edge-function", "response"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-043",
+    "category": "edge_functions",
+    "question": "How do I implement JWT validation in an EdgeOne Edge Function?",
+    "expected_topics": ["jwt", "validation", "auth", "edge-function"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-044",
+    "category": "edge_functions",
+    "question": "How do I access geolocation data in an EdgeOne Edge Function?",
+    "expected_topics": ["geolocation", "country", "edge-function", "request"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-045",
+    "category": "edge_functions",
+    "question": "What are the memory limits for EdgeOne Edge Functions?",
+    "expected_topics": ["memory", "limit", "edge-function", "quota"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-046",
+    "category": "security",
+    "question": "How do I configure WAF rules in EdgeOne to block SQL injection?",
+    "expected_topics": ["waf", "sql-injection", "rules", "block"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-047",
+    "category": "security",
+    "question": "How do I enable DDoS protection on an EdgeOne zone?",
+    "expected_topics": ["ddos", "protection", "zone", "enable"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-048",
+    "category": "security",
+    "question": "How do I add an IP address to an EdgeOne blocklist?",
+    "expected_topics": ["ip", "blocklist", "block", "rules"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-049",
+    "category": "security",
+    "question": "How do I configure rate limiting in EdgeOne to prevent abuse?",
+    "expected_topics": ["rate-limiting", "requests", "threshold", "block"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-050",
+    "category": "security",
+    "question": "How do I enable bot management features in EdgeOne?",
+    "expected_topics": ["bot", "management", "detection", "challenge"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-051",
+    "category": "security",
+    "question": "How do I configure CAPTCHA challenges for suspicious traffic in EdgeOne?",
+    "expected_topics": ["captcha", "challenge", "bot", "suspicious"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-052",
+    "category": "security",
+    "question": "How do I block requests based on country or region in EdgeOne?",
+    "expected_topics": ["geo-blocking", "country", "region", "rules"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-053",
+    "category": "security",
+    "question": "How do I configure XSS protection headers in EdgeOne?",
+    "expected_topics": ["xss", "headers", "protection", "security"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-054",
+    "category": "security",
+    "question": "How do I use EdgeOne managed WAF rule sets?",
+    "expected_topics": ["waf", "managed", "rules", "owasp"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-055",
+    "category": "security",
+    "question": "How do I configure custom WAF rules with regex matching?",
+    "expected_topics": ["waf", "regex", "custom", "rules"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-056",
+    "category": "security",
+    "question": "How do I whitelist specific IPs from WAF rules in EdgeOne?",
+    "expected_topics": ["whitelist", "ip", "waf", "bypass"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-057",
+    "category": "security",
+    "question": "What anti-hotlinking features does EdgeOne provide?",
+    "expected_topics": ["hotlink", "protection", "referer", "rules"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-058",
+    "category": "security",
+    "question": "How do I configure URL token-based anti-hotlinking in EdgeOne?",
+    "expected_topics": ["token", "hotlink", "url-signing", "authentication"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-059",
+    "category": "security",
+    "question": "How do I view WAF attack logs in EdgeOne?",
+    "expected_topics": ["waf", "logs", "attack", "monitoring"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-060",
+    "category": "security",
+    "question": "How do I configure HTTP flood protection in EdgeOne?",
+    "expected_topics": ["flood", "http", "protection", "rate-limit"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-061",
+    "category": "security",
+    "question": "How do I set up Content Security Policy headers via EdgeOne?",
+    "expected_topics": ["csp", "content-security-policy", "headers", "security"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-062",
+    "category": "security",
+    "question": "How does EdgeOne's CC attack (challenge collapser) protection work?",
+    "expected_topics": ["cc-attack", "protection", "challenge", "ddos"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-063",
+    "category": "security",
+    "question": "How do I configure EdgeOne to challenge suspicious User-Agent strings?",
+    "expected_topics": ["user-agent", "challenge", "bot", "security"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-064",
+    "category": "security",
+    "question": "How do I enable DNSSEC for my EdgeOne zone?",
+    "expected_topics": ["dnssec", "dns", "security", "zone"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-065",
+    "category": "security",
+    "question": "How do I configure mutual TLS (mTLS) client certificate authentication in EdgeOne?",
+    "expected_topics": ["mtls", "client-certificate", "authentication", "tls"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-066",
+    "category": "performance",
+    "question": "How do I optimize cache hit ratio in EdgeOne?",
+    "expected_topics": ["cache", "hit-ratio", "optimization", "performance"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-067",
+    "category": "performance",
+    "question": "How do I configure Brotli compression in EdgeOne?",
+    "expected_topics": ["brotli", "compression", "performance", "enable"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-068",
+    "category": "performance",
+    "question": "How do I purge the EdgeOne cache for a specific URL?",
+    "expected_topics": ["purge", "cache", "url", "invalidate"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-069",
+    "category": "performance",
+    "question": "How do I enable prefetch in EdgeOne for improved performance?",
+    "expected_topics": ["prefetch", "performance", "preload", "cache"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-070",
+    "category": "performance",
+    "question": "How do I configure origin connection keep-alive in EdgeOne?",
+    "expected_topics": ["keep-alive", "origin", "connection", "performance"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-071",
+    "category": "performance",
+    "question": "How do I use EdgeOne smart routing to reduce latency?",
+    "expected_topics": ["smart-routing", "latency", "network", "performance"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-072",
+    "category": "performance",
+    "question": "How do I configure bandwidth throttling for specific resources in EdgeOne?",
+    "expected_topics": ["bandwidth", "throttling", "limit", "speed"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-073",
+    "category": "performance",
+    "question": "How do I bulk purge cache by path prefix in EdgeOne?",
+    "expected_topics": ["purge", "prefix", "bulk", "cache"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-074",
+    "category": "performance",
+    "question": "How do I configure image optimization in EdgeOne?",
+    "expected_topics": ["image", "optimization", "webp", "compression"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-075",
+    "category": "performance",
+    "question": "How do EdgeOne edge nodes cache content?",
+    "expected_topics": ["edge-node", "cache", "storage", "behavior"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-076",
+    "category": "performance",
+    "question": "How do I configure TCP optimization in EdgeOne?",
+    "expected_topics": ["tcp", "optimization", "network", "performance"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-077",
+    "category": "performance",
+    "question": "How do I set up range request caching in EdgeOne?",
+    "expected_topics": ["range", "request", "cache", "partial"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-078",
+    "category": "performance",
+    "question": "How do I ignore the Cache-Control header from origin in EdgeOne?",
+    "expected_topics": ["cache-control", "ignore", "origin", "override"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-079",
+    "category": "performance",
+    "question": "How do I configure stale-while-revalidate behavior in EdgeOne?",
+    "expected_topics": ["stale-while-revalidate", "cache", "async", "background"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-080",
+    "category": "performance",
+    "question": "How do I monitor real-time performance metrics in EdgeOne?",
+    "expected_topics": ["monitoring", "metrics", "real-time", "analytics"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-081",
+    "category": "performance",
+    "question": "How does EdgeOne handle cache key normalization for query strings?",
+    "expected_topics": ["cache-key", "query-string", "normalization", "sort"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-082",
+    "category": "performance",
+    "question": "How do I enable 0-RTT resumption in EdgeOne for faster TLS?",
+    "expected_topics": ["0-rtt", "tls", "resumption", "performance"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-083",
+    "category": "performance",
+    "question": "How do I configure upstream connection multiplexing in EdgeOne?",
+    "expected_topics": ["multiplexing", "upstream", "connection", "http2"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-084",
+    "category": "performance",
+    "question": "How do I configure EdgeOne to serve stale content during origin outages?",
+    "expected_topics": ["stale", "origin", "outage", "fallback"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-085",
+    "category": "performance",
+    "question": "How do I set up aggressive preloading of frequently accessed resources in EdgeOne?",
+    "expected_topics": ["preloading", "performance", "prefetch", "warm-up"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-086",
+    "category": "api_usage",
+    "question": "How do I authenticate with the EdgeOne API?",
+    "expected_topics": ["api", "authentication", "key", "signature"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-087",
+    "category": "api_usage",
+    "question": "How do I use the tccli to manage EdgeOne zones?",
+    "expected_topics": ["tccli", "cli", "zone", "manage"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-088",
+    "category": "api_usage",
+    "question": "How do I create a new DNS record using the EdgeOne API?",
+    "expected_topics": ["dns", "api", "create", "record"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-089",
+    "category": "api_usage",
+    "question": "How do I list all zones in my EdgeOne account via the API?",
+    "expected_topics": ["zones", "list", "api", "account"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-090",
+    "category": "api_usage",
+    "question": "What does the DescribeZones API return?",
+    "expected_topics": ["describezones", "api", "zone", "response"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-091",
+    "category": "api_usage",
+    "question": "How do I trigger a cache purge via the EdgeOne API?",
+    "expected_topics": ["purge", "api", "cache", "invalidate"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-092",
+    "category": "api_usage",
+    "question": "How do I handle API rate limit errors from EdgeOne?",
+    "expected_topics": ["rate-limit", "api", "error", "retry"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-093",
+    "category": "api_usage",
+    "question": "How do I use the EdgeOne Python SDK?",
+    "expected_topics": ["sdk", "python", "client", "tencentcloud"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-094",
+    "category": "api_usage",
+    "question": "How do I paginate through large API responses in EdgeOne?",
+    "expected_topics": ["pagination", "api", "offset", "limit"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-095",
+    "category": "api_usage",
+    "question": "How do I configure tccli to use a specific EdgeOne region?",
+    "expected_topics": ["tccli", "region", "configure", "cli"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-096",
+    "category": "api_usage",
+    "question": "What is the correct request signature method for EdgeOne API calls?",
+    "expected_topics": ["signature", "hmac", "authentication", "tc3"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-097",
+    "category": "api_usage",
+    "question": "How do I create a rule using the ModifyRule API in EdgeOne?",
+    "expected_topics": ["modifyrule", "api", "rule", "create"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-098",
+    "category": "api_usage",
+    "question": "How do I deploy an Edge Function via the EdgeOne API?",
+    "expected_topics": ["edge-function", "deploy", "api", "upload"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-099",
+    "category": "api_usage",
+    "question": "How do I read real-time traffic logs via the EdgeOne API?",
+    "expected_topics": ["logs", "api", "real-time", "traffic"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-100",
+    "category": "api_usage",
+    "question": "How do I use the EdgeOne API to export access logs to COS?",
+    "expected_topics": ["logs", "cos", "export", "api"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-101",
+    "category": "api_usage",
+    "question": "How do I update an existing cache rule using tccli?",
+    "expected_topics": ["tccli", "cache", "rule", "update"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-102",
+    "category": "api_usage",
+    "question": "What are the available action types when creating EdgeOne rules via API?",
+    "expected_topics": ["action", "types", "api", "rules"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-103",
+    "category": "api_usage",
+    "question": "How do I check the status of an asynchronous EdgeOne API task?",
+    "expected_topics": ["async", "task", "status", "api"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-104",
+    "category": "api_usage",
+    "question": "How do I delete a zone using the EdgeOne API?",
+    "expected_topics": ["delete", "zone", "api", "remove"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-105",
+    "category": "api_usage",
+    "question": "How do I filter API responses for specific DNS record types in EdgeOne?",
+    "expected_topics": ["filter", "dns", "api", "record-type"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-106",
+    "category": "migration",
+    "question": "What are the main differences between Akamai and EdgeOne cache behavior?",
+    "expected_topics": ["akamai", "edgeone", "cache", "migration"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-107",
+    "category": "migration",
+    "question": "How does the Akamai Origin Server behavior map to EdgeOne?",
+    "expected_topics": ["akamai", "origin", "mapping", "migration"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-108",
+    "category": "migration",
+    "question": "What Akamai behaviors require Edge Functions in EdgeOne?",
+    "expected_topics": ["akamai", "edge-function", "behavior", "migration"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-109",
+    "category": "migration",
+    "question": "How do I validate an Akamai-to-EdgeOne migration?",
+    "expected_topics": ["validation", "migration", "testing", "comparison"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-110",
+    "category": "migration",
+    "question": "How does Akamai's Content Targeting behavior map to EdgeOne?",
+    "expected_topics": ["content-targeting", "akamai", "geolocation", "mapping"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-111",
+    "category": "migration",
+    "question": "What Akamai behaviors can be safely ignored during migration to EdgeOne?",
+    "expected_topics": ["ignore", "akamai", "behaviors", "migration"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-112",
+    "category": "migration",
+    "question": "How does Akamai's SureRoute map to EdgeOne smart routing?",
+    "expected_topics": ["sureroute", "akamai", "smart-routing", "performance"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-113",
+    "category": "migration",
+    "question": "How do I handle Akamai PMUSER variables when migrating to EdgeOne?",
+    "expected_topics": ["pmuser", "variables", "akamai", "edge-function"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-114",
+    "category": "migration",
+    "question": "What is the recommended strategy for migrating Akamai rules to EdgeOne?",
+    "expected_topics": ["strategy", "migration", "rules", "phased"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-115",
+    "category": "migration",
+    "question": "How does Akamai's Downstream Cacheability map to EdgeOne?",
+    "expected_topics": ["downstream", "cacheability", "akamai", "mapping"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-116",
+    "category": "migration",
+    "question": "How do I migrate Akamai property variables to EdgeOne?",
+    "expected_topics": ["variables", "akamai", "property", "migration"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-117",
+    "category": "migration",
+    "question": "What is the process for DNS cutover from Akamai to EdgeOne?",
+    "expected_topics": ["dns", "cutover", "akamai", "migration"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-118",
+    "category": "migration",
+    "question": "How does Akamai's Modify Outgoing Request Header behavior map to EdgeOne?",
+    "expected_topics": ["headers", "akamai", "mapping", "modify"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-119",
+    "category": "migration",
+    "question": "How do I test EdgeOne configuration before switching DNS from Akamai?",
+    "expected_topics": ["testing", "pre-cutover", "akamai", "validation"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-120",
+    "category": "migration",
+    "question": "How does Akamai's Token Authentication map to EdgeOne?",
+    "expected_topics": ["token", "authentication", "akamai", "url-signing"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-121",
+    "category": "troubleshooting",
+    "question": "Why is EdgeOne returning 502 errors for my origin?",
+    "expected_topics": ["502", "origin", "error", "upstream"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-122",
+    "category": "troubleshooting",
+    "question": "How do I diagnose a cache miss in EdgeOne?",
+    "expected_topics": ["cache-miss", "debug", "headers", "x-cache"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-123",
+    "category": "troubleshooting",
+    "question": "Why is my EdgeOne zone showing high origin latency?",
+    "expected_topics": ["latency", "origin", "performance", "debug"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-124",
+    "category": "troubleshooting",
+    "question": "How do I check EdgeOne access logs for a specific IP?",
+    "expected_topics": ["logs", "access", "ip", "filter"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-125",
+    "category": "troubleshooting",
+    "question": "Why are my EdgeOne rules not taking effect?",
+    "expected_topics": ["rules", "not-working", "debug", "order"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-126",
+    "category": "troubleshooting",
+    "question": "How do I trace a specific request through EdgeOne using request ID?",
+    "expected_topics": ["request-id", "trace", "debug", "logs"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-127",
+    "category": "troubleshooting",
+    "question": "Why is EdgeOne returning 403 for some requests but not others?",
+    "expected_topics": ["403", "forbidden", "waf", "rules"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-128",
+    "category": "troubleshooting",
+    "question": "How do I identify if a spike in traffic is causing performance degradation in EdgeOne?",
+    "expected_topics": ["traffic-spike", "performance", "monitoring", "analytics"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-129",
+    "category": "troubleshooting",
+    "question": "How do I debug Edge Function execution errors in EdgeOne?",
+    "expected_topics": ["edge-function", "error", "debug", "logs"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-130",
+    "category": "troubleshooting",
+    "question": "Why is content not being served from cache even after a warm-up?",
+    "expected_topics": ["cache", "warm-up", "bypass", "troubleshoot"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ-131",
+    "category": "troubleshooting",
+    "question": "How do I resolve SSL certificate errors on an EdgeOne zone?",
+    "expected_topics": ["ssl", "certificate", "error", "https"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-132",
+    "category": "troubleshooting",
+    "question": "What does it mean when EdgeOne reports a high 5xx error rate?",
+    "expected_topics": ["5xx", "error-rate", "origin", "troubleshoot"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-133",
+    "category": "billing",
+    "question": "How is EdgeOne bandwidth usage billed?",
+    "expected_topics": ["billing", "bandwidth", "traffic", "cost"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-134",
+    "category": "billing",
+    "question": "How do I view EdgeOne usage reports?",
+    "expected_topics": ["usage", "reports", "billing", "console"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-135",
+    "category": "billing",
+    "question": "What is the cost model for EdgeOne Edge Functions?",
+    "expected_topics": ["edge-function", "billing", "cost", "invocations"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-136",
+    "category": "billing",
+    "question": "How do I set billing alerts for EdgeOne usage?",
+    "expected_topics": ["alerts", "billing", "cost", "notification"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-137",
+    "category": "billing",
+    "question": "How does EdgeOne bill for HTTPS requests vs HTTP requests?",
+    "expected_topics": ["https", "http", "billing", "requests"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-138",
+    "category": "billing",
+    "question": "What cost optimization strategies can I apply for EdgeOne?",
+    "expected_topics": ["optimization", "cost", "cache", "billing"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-139",
+    "category": "billing",
+    "question": "How does EdgeOne bill for DDoS protection?",
+    "expected_topics": ["ddos", "billing", "protection", "cost"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-140",
+    "category": "billing",
+    "question": "How do I download a monthly usage invoice for EdgeOne?",
+    "expected_topics": ["invoice", "billing", "monthly", "download"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "GQ-141",
+    "category": "billing",
+    "question": "How is EdgeOne WAF usage billed?",
+    "expected_topics": ["waf", "billing", "requests", "cost"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "GQ-142",
+    "category": "billing",
+    "question": "What regions affect EdgeOne pricing for traffic billing?",
+    "expected_topics": ["regions", "pricing", "traffic", "billing"],
+    "difficulty": "medium"
+  }
+]

@@ -39,6 +39,16 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      qdrant:
+        image: qdrant/qdrant:latest
+        ports:
+          - 6333:6333
+        options: >-
+          --health-cmd "curl -f http://localhost:6333/healthz || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -95,3 +105,99 @@ jobs:
 
       - name: Run tests with Vitest
         run: npm test
+
+  eval-gate:
+    name: Eval Gate (golden question suite)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: [backend-ci]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      qdrant:
+        image: qdrant/qdrant:latest
+        ports:
+          - 6333:6333
+        options: >-
+          --health-cmd "curl -f http://localhost:6333/healthz || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/test_db
+      REDIS_URL: redis://localhost:6379/0
+      QDRANT_URL: http://localhost:6333
+      INTERNAL_API_KEY: test-key
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Run Alembic migrations
+        run: alembic -c backend/alembic.ini upgrade head
+
+      - name: Start FastAPI server
+        run: uvicorn backend.api.main:app --host 0.0.0.0 --port 8000 &
+
+      - name: Wait for server to be ready
+        run: |
+          python -c "
+          import httpx, time, sys
+          for i in range(30):
+              try:
+                  httpx.get('http://localhost:8000/health').raise_for_status()
+                  print('Server is ready')
+                  sys.exit(0)
+              except Exception:
+                  time.sleep(1)
+          print('Server did not start in 30s')
+          sys.exit(1)
+          "
+
+      - name: Run eval suite (20-question sample)
+        run: python eval/run_eval.py --api-url http://localhost:8000 --api-key test-key --limit 20
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results-${{ github.sha }}
+          path: eval/results/
+          retention-days: 30
