@@ -1,0 +1,59 @@
+# Web framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+# Database
+sqlalchemy[asyncio]==2.0.36
+alembic==1.14.0
+asyncpg==0.30.0
+psycopg2-binary==2.9.10
+
+# Task queue — RQ (NOT Celery)
+rq==1.16.2
+redis==5.2.1
+
+# Vector DB client
+qdrant-client==1.12.1
+
+# Embeddings
+openai==1.57.4
+tiktoken==0.8.0
+
+# LLM
+anthropic==0.40.0
+
+# Reranker
+cohere==5.13.0
+
+# Web crawling + HTML parsing
+crawl4ai==0.4.3
+beautifulsoup4==4.12.3
+lxml==5.3.0
+httpx==0.28.1
+
+# BM25 hybrid search
+rank-bm25==0.2.2
+
+# Markdown parsing
+markdown-it-py==3.0.0
+
+# Pydantic (used by FastAPI)
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# Auth
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+
+# Linting + type checking (also in pyproject.toml)
+ruff==0.8.6
+mypy==1.13.0
+
+# Type stubs
+types-redis==4.6.0.20241004
+types-beautifulsoup4==4.12.0.20241020
