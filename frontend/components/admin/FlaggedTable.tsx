@@ -1,47 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useStrings } from "@/lib/i18n";
+import { getFlaggedQueries, reviewFlaggedQuery, type FlaggedQuery } from "@/lib/api";
 
-interface FlaggedRow {
-  id: string;
-  query: string;
-  score: number;
-  reason: string;
-  status: "review" | "resolved";
-}
-
-const MOCK_FLAGGED_DATA: FlaggedRow[] = [
-  {
-    id: "1",
-    query: "How do I configure wildcard SSL for EdgeOne?",
-    score: 0.61,
-    reason: "Groundedness below threshold",
-    status: "review",
-  },
-  {
-    id: "2",
-    query: "What are EdgeOne's rate limiting options?",
-    score: 0.58,
-    reason: "Hallucination detected",
-    status: "review",
-  },
-  {
-    id: "3",
-    query: "Can EdgeOne handle WebSocket traffic?",
-    score: 0.72,
-    reason: "Completeness low",
-    status: "resolved",
-  },
-  {
-    id: "4",
-    query: "How to migrate Akamai SureRoute to EdgeOne?",
-    score: 0.60,
-    reason: "Overall score below threshold",
-    status: "review",
-  },
-];
-
-function ScorePill({ score }: { score: number }) {
+function ScorePill({ score }: { score: number | null }) {
+  if (score === null) return <span className="text-xs font-mono" style={{ color: "#94A3B8" }}>—</span>;
   const color = score >= 0.85 ? "#6EE7B7" : score < 0.7 ? "#F87171" : "#FBBF24";
   return (
     <span className="text-xs font-mono" style={{ color }}>
@@ -50,11 +14,20 @@ function ScorePill({ score }: { score: number }) {
   );
 }
 
-function StatusPill({ status }: { status: "review" | "resolved" }) {
-  const isReview = status === "review";
+function StatusPill({
+  reviewed,
+  evalId,
+  onToggle,
+}: {
+  reviewed: boolean;
+  evalId: string;
+  onToggle: (evalId: string, reviewed: boolean) => void;
+}) {
+  const isReview = !reviewed;
   return (
-    <span
-      className="text-xs px-2 py-0.5 rounded-sm font-medium"
+    <button
+      onClick={() => onToggle(evalId, !reviewed)}
+      className="text-xs px-2 py-0.5 rounded-sm font-medium cursor-pointer"
       style={{
         backgroundColor: isReview ? "rgba(251,191,36,0.1)" : "rgba(110,231,183,0.1)",
         color: isReview ? "#FBBF24" : "#6EE7B7",
@@ -62,12 +35,32 @@ function StatusPill({ status }: { status: "review" | "resolved" }) {
       }}
     >
       {isReview ? "Review" : "Resolved"}
-    </span>
+    </button>
   );
 }
 
 export default function FlaggedTable() {
   const t = useStrings();
+  const [rows, setRows] = useState<FlaggedQuery[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getFlaggedQueries()
+      .then((res) => setRows(res.items))
+      .catch(() => setRows([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleToggleReview = async (evalId: string, reviewed: boolean) => {
+    try {
+      const updated = await reviewFlaggedQuery(evalId, reviewed);
+      setRows((prev) =>
+        prev.map((r) => (r.eval_id === evalId ? { ...r, reviewed: updated.reviewed } : r))
+      );
+    } catch {
+      // silently ignore toggle errors
+    }
+  };
 
   return (
     <div
@@ -77,47 +70,67 @@ export default function FlaggedTable() {
         border: "1px solid #2A2A2A",
       }}
     >
-      <table className="w-full text-sm">
-        <thead>
-          <tr style={{ borderBottom: "1px solid #2A2A2A" }}>
-            {[t.query, t.scoreLabel, t.reason, t.status].map((col) => (
-              <th
-                key={col}
-                className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-widest"
-                style={{ color: "#94A3B8" }}
-              >
-                {col}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {MOCK_FLAGGED_DATA.map((row, i) => (
-            <tr
-              key={row.id}
-              style={{
-                borderBottom:
-                  i < MOCK_FLAGGED_DATA.length - 1 ? "1px solid #2A2A2A" : "none",
-              }}
-            >
-              <td className="px-4 py-3 text-white max-w-xs">
-                <span className="truncate block" title={row.query}>
-                  {row.query}
-                </span>
-              </td>
-              <td className="px-4 py-3">
-                <ScorePill score={row.score} />
-              </td>
-              <td className="px-4 py-3 text-xs" style={{ color: "#94A3B8" }}>
-                {row.reason}
-              </td>
-              <td className="px-4 py-3">
-                <StatusPill status={row.status} />
-              </td>
+      {loading ? (
+        <div
+          className="flex items-center justify-center py-8 text-xs"
+          style={{ color: "#94A3B8" }}
+        >
+          Loading...
+        </div>
+      ) : (
+        <table className="w-full text-sm">
+          <thead>
+            <tr style={{ borderBottom: "1px solid #2A2A2A" }}>
+              {[t.query, t.scoreLabel, t.reason, t.status].map((col) => (
+                <th
+                  key={col}
+                  className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-widest"
+                  style={{ color: "#94A3B8" }}
+                >
+                  {col}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-4 py-6 text-center text-xs" style={{ color: "#94A3B8" }}>
+                  No flagged queries
+                </td>
+              </tr>
+            ) : (
+              rows.map((row, i) => (
+                <tr
+                  key={row.eval_id}
+                  style={{
+                    borderBottom: i < rows.length - 1 ? "1px solid #2A2A2A" : "none",
+                  }}
+                >
+                  <td className="px-4 py-3 text-white max-w-xs">
+                    <span className="truncate block" title={row.query_text ?? ""}>
+                      {row.query_text ?? "—"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <ScorePill score={row.overall_score} />
+                  </td>
+                  <td className="px-4 py-3 text-xs" style={{ color: "#94A3B8" }}>
+                    {row.flag_reason ?? "—"}
+                  </td>
+                  <td className="px-4 py-3">
+                    <StatusPill
+                      reviewed={row.reviewed}
+                      evalId={row.eval_id}
+                      onToggle={handleToggleReview}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

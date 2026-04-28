@@ -15,6 +15,7 @@ from openai import AsyncOpenAI
 from qdrant_client import AsyncQdrantClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.api.eval.dispatcher import dispatch_eval
 from backend.api.middleware.auth import require_api_key
 from backend.api.middleware.rate_limit import check_rate_limit
 from backend.api.pipeline.cache import CacheLayer
@@ -31,11 +32,6 @@ from backend.ingestion.embedder import Embedder
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-
-
-async def _dispatch_eval(query_id: str, answer: str, citations: list) -> None:
-    """Fire-and-forget eval task stub. Phase 4 wires real scoring."""
-    logger.debug("Eval dispatch queued for query_id=%s", query_id)
 
 
 @router.post("/query", response_model=QueryResponse)
@@ -154,7 +150,19 @@ async def submit_query(
             ]
 
             # 8. Fire-and-forget eval
-            asyncio.create_task(_dispatch_eval(query_id, cleaned_answer, citations_dicts))
+            asyncio.create_task(dispatch_eval(
+                query_id=query_id,
+                query_text=body.query,
+                answer=cleaned_answer,
+                citations=citations_dicts,
+                confidence=confidence,
+                no_answer=no_answer,
+                latency_ms=int((time.time() - start_ms) * 1000),
+                caller_id=body.caller_id,
+                session_id=body.session_id,
+                language=language,
+                anthropic_api_key=settings.ANTHROPIC_API_KEY,
+            ))
 
             # 9. Cache store
             if cache:

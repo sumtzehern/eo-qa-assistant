@@ -75,16 +75,17 @@ export async function getSources(): Promise<SourceRecord[]> {
 }
 
 export interface EvalSummary {
-  overall_score: number;
-  hallucination_rate: number;
-  no_answer_rate: number;
-  cache_hit_rate: number;
-  trend: Array<{
-    date: string;
-    groundedness: number;
-    retrieval_relevance: number;
-    overall: number;
-  }>;
+  period_days: number;
+  total_queries: number;
+  avg_groundedness: number | null;
+  avg_retrieval_relevance: number | null;
+  avg_citation_accuracy: number | null;
+  avg_completeness: number | null;
+  avg_overall_score: number | null;
+  hallucination_rate: number | null;
+  no_answer_rate: number | null;
+  flagged_count: number;
+  cache_hit_rate: number | null;
 }
 
 export async function getEvalSummary(): Promise<EvalSummary> {
@@ -94,16 +95,45 @@ export async function getEvalSummary(): Promise<EvalSummary> {
 }
 
 export interface FlaggedQuery {
-  id: string;
-  query: string;
-  score: number;
-  reason: string;
-  status: "review" | "resolved";
-  created_at: string;
+  eval_id: string;
+  query_id: string;
+  query_text: string | null;
+  flag_reason: string | null;
+  groundedness: number | null;
+  overall_score: number | null;
+  hallucination: boolean | null;
+  reviewed: boolean;
+  completed_at: string | null;
 }
 
-export async function getFlaggedQueries(): Promise<FlaggedQuery[]> {
-  const res = await fetch(`${API_BASE}/admin/eval/flagged`, { headers: headers() });
+export interface FlaggedQueriesResponse {
+  items: FlaggedQuery[];
+  total: number;
+}
+
+export async function getFlaggedQueries(
+  reviewed?: boolean,
+  limit: number = 50,
+  offset: number = 0
+): Promise<FlaggedQueriesResponse> {
+  const params = new URLSearchParams();
+  if (reviewed !== undefined) params.set("reviewed", String(reviewed));
+  params.set("limit", String(limit));
+  params.set("offset", String(offset));
+  const res = await fetch(`${API_BASE}/admin/eval/flagged?${params}`, { headers: headers() });
   if (!res.ok) throw new Error(`getFlaggedQueries failed: ${res.status}`);
-  return res.json() as Promise<FlaggedQuery[]>;
+  return res.json() as Promise<FlaggedQueriesResponse>;
+}
+
+export async function reviewFlaggedQuery(
+  evalId: string,
+  reviewed: boolean
+): Promise<FlaggedQuery> {
+  const res = await fetch(`${API_BASE}/admin/eval/flagged/${evalId}`, {
+    method: "PATCH",
+    headers: headers(),
+    body: JSON.stringify({ reviewed }),
+  });
+  if (!res.ok) throw new Error(`reviewFlaggedQuery failed: ${res.status}`);
+  return res.json() as Promise<FlaggedQuery>;
 }
