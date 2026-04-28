@@ -82,7 +82,7 @@
 
 ### INFRA — Infrastructure & CI/CD
 
-- [ ] **INFRA-01** — `docker compose up` starts the full local dev stack: FastAPI, Next.js, PostgreSQL, Redis, Chroma, Celery worker
+- [ ] **INFRA-01** — `docker compose up` starts the full local dev stack: FastAPI, Next.js, PostgreSQL, Redis, Qdrant, RQ worker
 - [ ] **INFRA-02** — PostgreSQL schema is managed via Alembic migrations; `alembic upgrade head` applies all migrations cleanly
 - [ ] **INFRA-03** — GitHub Actions PR gate runs: ruff lint, mypy typecheck, pytest backend suite on every PR
 - [ ] **INFRA-04** — GitHub Actions PR gate runs: ESLint, TypeScript typecheck, Vitest unit tests on every PR

@@ -38,7 +38,7 @@ Phase 6  ──── Enterprise Eval Suite + CI Integration        ←── WA
 - INFRA-06 — Secrets management via environment variables
 
 **Deliverables:**
-- `docker-compose.yml` starts: FastAPI (placeholder), Next.js (placeholder), PostgreSQL, Redis, Chroma, Celery worker
+- `docker-compose.yml` starts: FastAPI (placeholder), Next.js (placeholder), PostgreSQL, Redis, Qdrant, RQ worker
 - `alembic/` with initial migrations for `chunks`, `queries`, `eval_results`, `ingestion_jobs` tables
 - `.github/workflows/ci.yml` runs lint + typecheck + pytest on PR
 - `.env.example` with all required variables; `.env` in `.gitignore`
