@@ -49,6 +49,7 @@ passlib[bcrypt]==1.7.4
 pytest==8.3.4
 pytest-asyncio==0.24.0
 pytest-cov==6.0.0
+fakeredis==2.26.2
 
 # Linting + type checking (also in pyproject.toml)
 ruff==0.8.6

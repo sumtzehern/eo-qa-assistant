@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from backend.api.middleware.rate_limit import set_redis_client
+from backend.api.routes import cache as cache_router
 from backend.api.routes import eval, ingestion, query, sources
 from backend.api.settings import settings
 from backend.db.session import init_db
@@ -142,6 +143,7 @@ app.include_router(query.router, prefix="/v1", tags=["query"])
 app.include_router(sources.router, prefix="/v1", tags=["sources"])
 app.include_router(eval.router, prefix="/v1", tags=["eval"])
 app.include_router(ingestion.router, prefix="/v1", tags=["ingestion"])
+app.include_router(cache_router.router, prefix="/v1", tags=["cache"])
 
 
 # ---------------------------------------------------------------------------

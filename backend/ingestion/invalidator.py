@@ -4,7 +4,8 @@ Deletes all Redis cache keys associated with a given source_id so that
 stale query-cache entries are flushed after re-ingestion.
 
 Key naming convention (must match query pipeline cache layer):
-  cache:<query_hash>:<source_id>:<anything>
+  cache:query:{query_id}               — main entry
+  cache:src_idx:{source_id}:{query_id} — secondary index
 """
 
 import logging
@@ -21,19 +22,26 @@ class CacheInvalidator:
         self.redis = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
 
     async def invalidate_source(self, source_id: str) -> int:
-        """Delete all Redis keys matching `cache:*:<source_id>:*`.
+        """Delete all cache entries whose source_ids include *source_id*.
 
-        Returns the number of keys deleted.
+        Scans the secondary index ``cache:src_idx:{source_id}:*`` to discover
+        affected query_ids, then deletes both the main entry and the index key.
+
+        Returns the number of main cache entries deleted.
         """
-        pattern = f"cache:*:{source_id}:*"
+        pattern = f"cache:src_idx:{source_id}:*"
         deleted = 0
 
-        async for key in self.redis.scan_iter(pattern):
-            await self.redis.delete(key)
-            deleted += 1
+        async for idx_key in self.redis.scan_iter(pattern):
+            # idx_key format: cache:src_idx:{source_id}:{query_id}
+            query_id = await self.redis.get(idx_key)
+            if query_id:
+                await self.redis.delete(f"cache:query:{query_id}")
+                deleted += 1
+            await self.redis.delete(idx_key)
 
         logger.info(
-            "CacheInvalidator: deleted %d Redis keys for source_id='%s'",
+            "CacheInvalidator: deleted %d cache entries for source_id='%s'",
             deleted,
             source_id,
         )

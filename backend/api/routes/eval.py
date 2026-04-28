@@ -7,6 +7,7 @@ from sqlalchemy import Float, cast, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.middleware.auth import require_admin, require_api_key
+from backend.api.pipeline.cache import CacheLayer
 from backend.api.schemas.common import (
     EvalSummaryResponse,
     FlaggedQueriesResponse,
@@ -67,6 +68,17 @@ async def get_eval_summary(
             avg_g = avg_rr = avg_ca = avg_co = avg_overall = hall_rate = None
             flagged_count = 0
 
+        # Cache hit rate from Redis stats
+        cache_hit_rate: float | None = None
+        redis_client = getattr(request.app.state, "redis", None)
+        if redis_client is not None:
+            try:
+                cache = CacheLayer(redis_client=redis_client, embedder=None)
+                stats = await cache.get_stats()
+                cache_hit_rate = stats.get("hit_rate")
+            except Exception:
+                pass
+
         return EvalSummaryResponse(
             period_days=period_days,
             total_queries=total_queries,
@@ -78,7 +90,7 @@ async def get_eval_summary(
             hallucination_rate=float(hall_rate) if hall_rate is not None else None,
             no_answer_rate=no_answer_rate,
             flagged_count=int(flagged_count) if flagged_count else 0,
-            cache_hit_rate=None,
+            cache_hit_rate=cache_hit_rate,
             request_id=request.state.request_id,
         )
     except Exception:

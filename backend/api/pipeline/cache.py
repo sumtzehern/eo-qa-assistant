@@ -3,6 +3,10 @@
 Stores query embeddings + answers keyed by query_id.
 On lookup, scans existing cache keys and returns a hit if
 cosine similarity >= threshold.
+
+Key schema:
+  cache:query:{query_id}              — main entry (hash)
+  cache:src_idx:{source_id}:{query_id} — secondary index for invalidation (string)
 """
 
 from __future__ import annotations
@@ -10,9 +14,11 @@ from __future__ import annotations
 import json
 import logging
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
+
+_STATS_KEY = "cache:stats"
 
 
 @dataclass
@@ -49,30 +55,23 @@ class CacheLayer:
     async def get(self, query_embedding: list[float], query_id: str) -> CacheHit | None:
         """Return a CacheHit if a semantically similar query is cached."""
         try:
-            keys = await self._redis.keys("cache:query:*")
-            for key in keys:
+            async for key in self._redis.scan_iter("cache:query:*"):
                 entry = await self._redis.hgetall(key)
                 if not entry:
                     continue
-                stored_emb = json.loads(entry.get(b"embedding") or entry.get("embedding", "null"))
+                stored_emb = json.loads(entry.get("embedding", "null"))
                 if stored_emb is None:
                     continue
                 sim = self._cosine_sim(query_embedding, stored_emb)
                 if sim >= self._threshold:
-                    answer = (entry.get(b"answer") or entry.get("answer", b"")).decode(
-                        "utf-8"
-                    ) if isinstance(entry.get(b"answer") or entry.get("answer"), bytes) else str(entry.get(b"answer") or entry.get("answer", ""))
-                    citations = json.loads(
-                        entry.get(b"citations") or entry.get("citations", "[]")
-                    )
-                    confidence = float(
-                        entry.get(b"confidence") or entry.get("confidence", 0.0)
-                    )
+                    await self._redis.hincrby(_STATS_KEY, "hits", 1)
                     return CacheHit(
-                        answer=answer,
-                        citations=citations,
-                        confidence=confidence,
+                        answer=entry.get("answer", ""),
+                        citations=json.loads(entry.get("citations", "[]")),
+                        confidence=float(entry.get("confidence", 0.0)),
                     )
+            # No hit found
+            await self._redis.hincrby(_STATS_KEY, "misses", 1)
         except Exception:
             logger.warning("Cache lookup failed", exc_info=True)
         return None
@@ -98,5 +97,23 @@ class CacheLayer:
             }
             await self._redis.hset(key, mapping=mapping)
             await self._redis.expire(key, 86400)
+
+            # Write secondary index keys for invalidation
+            for source_id in source_ids:
+                idx_key = f"cache:src_idx:{source_id}:{query_id}"
+                await self._redis.set(idx_key, query_id, ex=86400)
         except Exception:
             logger.warning("Cache set failed", exc_info=True)
+
+    async def get_stats(self) -> dict:
+        """Return cache hit/miss counters and computed hit_rate."""
+        try:
+            raw = await self._redis.hgetall(_STATS_KEY)
+            hits = int(raw.get("hits", 0))
+            misses = int(raw.get("misses", 0))
+            total = hits + misses
+            hit_rate = hits / total if total > 0 else None
+            return {"hits": hits, "misses": misses, "hit_rate": hit_rate}
+        except Exception:
+            logger.warning("Cache stats lookup failed", exc_info=True)
+            return {"hits": 0, "misses": 0, "hit_rate": None}
