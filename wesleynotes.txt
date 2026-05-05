@@ -1,0 +1,121 @@
+
+=============================================================
+  EDGEONE QA ASSISTANT — GET STARTED GUIDE (Wesley's Notes)
+=============================================================
+
+WHAT YOU NEED FIRST (one-time setup)
+-------------------------------------
+1. Docker Desktop installed and running
+2. Git repo pushed to GitHub
+3. 3 API keys (get them free or paid):
+   - Anthropic: https://console.anthropic.com  → API Keys
+   - OpenAI:    https://platform.openai.com    → API Keys
+   - Cohere:    https://dashboard.cohere.com   → API Keys
+
+-------------------------------------------------------------
+STEP 1 — Copy the env file and fill in your keys
+-------------------------------------------------------------
+  cp .env.example .env
+
+  Open .env in any text editor and fill in:
+    ANTHROPIC_API_KEY=sk-ant-...
+    OPENAI_API_KEY=sk-...
+    COHERE_API_KEY=...
+    INTERNAL_API_KEY=any-random-string-you-make-up
+    ADMIN_API_KEY=another-random-string-you-make-up
+    JWT_SECRET=yet-another-random-string-you-make-up
+    POSTGRES_PASSWORD=make-up-a-db-password
+
+  (Leave DATABASE_URL, REDIS_URL, QDRANT_URL as-is for local dev)
+
+-------------------------------------------------------------
+STEP 2 — Start all services locally (dev mode)
+-------------------------------------------------------------
+  docker compose up
+
+  This starts 6 containers:
+    - PostgreSQL (database)
+    - Redis (cache + job queue)
+    - Qdrant (vector database)
+    - API (FastAPI backend on port 8000)
+    - Worker (background job processor)
+    - Frontend (Next.js on port 3000)
+
+  Wait ~30 seconds for everything to be healthy.
+
+-------------------------------------------------------------
+STEP 3 — Run database migrations (first time only)
+-------------------------------------------------------------
+  docker compose exec api alembic upgrade head
+
+  This creates all the tables in PostgreSQL.
+
+-------------------------------------------------------------
+STEP 4 — Ingest some documents (feeds the AI knowledge)
+-------------------------------------------------------------
+  curl -X POST http://localhost:8000/v1/ingestion/trigger \
+    -H "X-API-Key: <your INTERNAL_API_KEY from .env>"
+
+  This kicks off a background job that crawls EdgeOne docs,
+  embeds them, and stores them in Qdrant.
+  Check status: http://localhost:8000/v1/sources
+
+-------------------------------------------------------------
+STEP 5 — Open the app
+-------------------------------------------------------------
+  Frontend (chat UI):   http://localhost:3000
+  API docs (Swagger):   http://localhost:8000/docs
+  Admin dashboard:      http://localhost:3000/admin
+
+-------------------------------------------------------------
+STEP 6 — Ask a question (test it works)
+-------------------------------------------------------------
+  curl -X POST http://localhost:8000/v1/query \
+    -H "Content-Type: application/json" \
+    -H "X-API-Key: <your INTERNAL_API_KEY>" \
+    -d '{"query": "How do I create a zone in EdgeOne?"}'
+
+  You should get a streaming answer with [1][2] citations.
+
+-------------------------------------------------------------
+ACTIVATE THE CI GATE (GitHub)
+-------------------------------------------------------------
+  Go to: GitHub repo → Settings → Secrets and variables
+         → Actions → New repository secret
+
+  Add these 3 secrets (same keys as your .env):
+    ANTHROPIC_API_KEY
+    OPENAI_API_KEY
+    COHERE_API_KEY
+
+  After this, every PR to main will auto-run 20 eval questions
+  and block merge if quality drops below threshold.
+
+-------------------------------------------------------------
+DEPLOY TO PRODUCTION (when ready)
+-------------------------------------------------------------
+  On your server (Linux VM, 2 vCPU / 4GB RAM minimum):
+
+  1. git clone <your-repo> && cd edgeone-qa-assistant
+  2. cp .env.example .env  (fill in all keys)
+  3. Edit nginx/nginx.conf — replace "your-domain.com" with real domain
+  4. Edit docker-compose.prod.yml line 102 — same domain replacement
+  5. Place SSL certs on server:
+       /etc/ssl/certs/cert.pem
+       /etc/ssl/private/key.pem
+     (use Certbot for free Let's Encrypt certs)
+  6. docker compose -f docker-compose.prod.yml up -d
+  7. docker compose -f docker-compose.prod.yml exec api alembic upgrade head
+  8. Trigger ingestion (Step 4 above, but against your domain URL)
+
+-------------------------------------------------------------
+COMMON COMMANDS
+-------------------------------------------------------------
+  docker compose up -d          # start in background
+  docker compose down           # stop everything
+  docker compose logs api -f    # watch API logs live
+  docker compose logs worker -f # watch ingestion worker logs
+  docker compose restart api    # restart just the API
+
+  cp .env.example .env  # fill in API keys
+  docker compose up     # all 6 services (dev)
